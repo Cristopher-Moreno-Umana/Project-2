@@ -137,12 +137,18 @@
   <ItemGroup>
     <ClCompile Include="button.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="nodeTouristSpot.cpp" />
     <ClCompile Include="projectFuctions.cpp" />
+    <ClCompile Include="touristRoute.cpp" />
+    <ClCompile Include="touristSpot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.h" />
     <ClInclude Include="libraries.h" />
+    <ClInclude Include="nodeTouristSpot.h" />
     <ClInclude Include="projectFunctions.h" />
+    <ClInclude Include="touristRoute.h" />
+    <ClInclude Include="touristSpot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
