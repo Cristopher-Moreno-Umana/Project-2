@@ -11,15 +11,13 @@ private:
 	sf::CircleShape circle;
 	sf::Text text;
 	sf::Vector2i coordinates;
-	sf::Mouse mouseData;
 	
 public:
 
 	Button();
-	Button(sf::RectangleShape aRectangle, 
-		sf::Vector2i newCoordinates, sf::Mouse newMouseData);
-	Button(sf::CircleShape aCircle, sf::Vector2i newCoordinates, sf::Mouse newMouseData);
-	Button(sf::Text aText, sf::Vector2i newCoordinates, sf::Mouse newMouseData);
+	Button(sf::RectangleShape aRectangle,sf::Vector2i newCoordinates);
+	Button(sf::CircleShape aCircle, sf::Vector2i newCoordinates);
+	Button(sf::Text aText, sf::Vector2i newCoordinates);
 	
 	~Button();
 
@@ -27,18 +25,16 @@ public:
 	void setCicle(sf::CircleShape aCircle);
 	void setText(sf::Text aText);
 	void setCoordinates(sf::Vector2i newCoordinates);
-	void setMouseData(sf::Mouse newMouseData);
 
 	sf::RectangleShape getRectangle();
 	sf::CircleShape getCircleShape();
 	sf::Text getText();
-	sf::Vector2i getCoodinates();
-	sf::Mouse getMouseData();
+	sf::Vector2i getCoordinates();
 
 	void draw(sf::RenderTarget& target);
-	double getTextArea();
 	bool isCursorOn(Button aButton, sf::RenderWindow& aWindow);
-	
+	void followMouse(Button& aButton, sf::RenderWindow& aWindow);
+	bool isButtonClicked(Button& aButton, sf::RenderWindow& aWindow);
 };
 
 #endif

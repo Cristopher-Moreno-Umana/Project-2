@@ -5,6 +5,7 @@
 
 class NodeTouristSpot
 {
+
 public:
 	TouristSpot touristSpot;
 	NodeTouristSpot* next;

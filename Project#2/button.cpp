@@ -9,29 +9,25 @@ Button::Button()
 }
 
 Button::Button(sf::RectangleShape aRectangle, 
-	sf::Vector2i newCoordinates, sf::Mouse newMouseData)
+	sf::Vector2i newCoordinates)
 {
 	this->rectangle = aRectangle;
 	this->coordinates = newCoordinates;
-	this->mouseData = newMouseData;
 	this->rectangle.setPosition(static_cast<float>(coordinates.x), static_cast<float>(coordinates.y));
 }
 
 Button::Button(sf::CircleShape aCircle,
-	sf::Vector2i newCoordinates, sf::Mouse newMouseData)
+	sf::Vector2i newCoordinates)
 {
 	this->circle = aCircle;
 	this->coordinates = newCoordinates;
-	this->mouseData = newMouseData;
 	this->circle.setPosition(static_cast<float>(coordinates.x), static_cast<float>(coordinates.y));
 }
 
-Button::Button(sf::Text aText, sf::Vector2i newCoordinates,
-	sf::Mouse newMouseData)
+Button::Button(sf::Text aText, sf::Vector2i newCoordinates)
 {
 	this->text = aText;
 	this->coordinates = newCoordinates;
-	this->mouseData = newMouseData;
 	this->text.setPosition(static_cast<float>(coordinates.x), static_cast<float>(coordinates.y));
 }
 
@@ -60,11 +56,6 @@ void Button::setCoordinates(sf::Vector2i newCoordinates)
 	this->coordinates = newCoordinates;
 }
 
-void Button::setMouseData(sf::Mouse newMouseData)
-{
-	this->mouseData = newMouseData;
-}
-
 sf::RectangleShape Button::getRectangle()
 {
 	return this->rectangle;
@@ -80,15 +71,11 @@ sf::Text Button::getText()
 	return this->text;
 }
 
-sf::Vector2i Button::getCoodinates()
+sf::Vector2i Button::getCoordinates()
 {
 	return this->coordinates;
 }
 
-sf::Mouse Button::getMouseData()
-{
-	return this->mouseData;
-}
 
 void Button::draw(sf::RenderTarget& target)
 {
@@ -103,40 +90,32 @@ void Button::draw(sf::RenderTarget& target)
 	target.draw(text);
 }
 
-double Button::getTextArea()
-{
-	double totalArea;
-	sf::FloatRect textBound = this->text.getGlobalBounds();
-	
-	totalArea = textBound.width * textBound.height;
-	return totalArea;
-}
-
 bool Button::isCursorOn(Button aButton,sf::RenderWindow& aWindow)
 {
-	if (aButton.getRectangle().getGlobalBounds().
-		contains(static_cast<float>(aButton.getMouseData().getPosition(aWindow).x),
-			static_cast<float>(aButton.getMouseData().getPosition(aWindow).y)))
-	{	
-		return true;
-	}
-	if (aButton.getRectangle().getGlobalBounds().
-		contains(static_cast<float>(aButton.getMouseData().getPosition(aWindow).x),
-			static_cast<float>(aButton.getMouseData().getPosition(aWindow).y)))
-	{
-		return true;
-	}
-	if (aButton.getText().getGlobalBounds().
-		contains(static_cast<float>(aButton.getMouseData().getPosition(aWindow).x),
-			static_cast<float>(aButton.getMouseData().getPosition(aWindow).y)))
-	{
+	Vector2i mousePosition = Mouse::getPosition();
+	
+	float positionX = static_cast<float>(mousePosition.x);
+	float positionY = static_cast<float>(mousePosition.y);
+	
+	bool isOnRectangleButton =
+		(aButton.getRectangle().getGlobalBounds().contains(positionX, positionY));
+	bool isOnCircleButton =
+		aButton.getCircleShape().getGlobalBounds().contains(positionX, positionY);
+	bool isOnTextButton = 
+		aButton.getText().getGlobalBounds().contains(positionX, positionY);
 
-		//button.getText().setCharacterSize()
-		return true;
-	}
-	return false;
+	return isOnRectangleButton || isOnCircleButton  || isOnTextButton;
 }
 
+void Button::followMouse(Button& aButton, sf::RenderWindow& aWindow)
+{
+	aButton.coordinates.x = Mouse::getPosition(aWindow).x;
+	aButton.coordinates.y = Mouse::getPosition(aWindow).y;
+}
 
+bool Button::isButtonClicked(Button& aButton, sf::RenderWindow& aWindow)
+{
+	return isCursorOn(aButton, aWindow) && Mouse::isButtonPressed(Mouse::Left);
+}
 
 
