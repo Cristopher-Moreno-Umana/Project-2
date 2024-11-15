@@ -136,21 +136,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="button.cpp" />
+    <ClCompile Include="colorPalette.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="nodeTouristRoute.cpp" />
     <ClCompile Include="nodeTouristSpot.cpp" />
     <ClCompile Include="projectFunctions.cpp" />
     <ClCompile Include="routeList.cpp" />
+    <ClCompile Include="textField.cpp" />
     <ClCompile Include="touristRoute.cpp" />
     <ClCompile Include="touristSpot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.h" />
+    <ClInclude Include="colorPalette.h" />
     <ClInclude Include="libraries.h" />
     <ClInclude Include="nodeTouristRoute.h" />
     <ClInclude Include="nodeTouristSpot.h" />
     <ClInclude Include="projectFunctions.h" />
     <ClInclude Include="routeList.h" />
+    <ClInclude Include="textField.h" />
     <ClInclude Include="touristRoute.h" />
     <ClInclude Include="touristSpot.h" />
   </ItemGroup>

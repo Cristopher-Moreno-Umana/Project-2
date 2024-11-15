@@ -7,34 +7,33 @@ class Button
 {
 
 private:
-	sf::RectangleShape rectangle;
-	sf::CircleShape circle;
-	sf::Text text;
-	sf::Vector2i coordinates;
-	
+	RectangleShape rectangle;
+	CircleShape circle;
+	Text text;
+	Vector2f coordinates;
 public:
 
 	Button();
-	Button(sf::RectangleShape aRectangle,sf::Vector2i newCoordinates);
-	Button(sf::CircleShape aCircle, sf::Vector2i newCoordinates);
-	Button(sf::Text aText, sf::Vector2i newCoordinates);
+	Button(sf::RectangleShape aRectangle,sf::Vector2f newCoordinates);
+	Button(sf::CircleShape aCircle, sf::Vector2f newCoordinates);
+	Button(sf::Text aText, sf::Vector2f newCoordinates);
 	
 	~Button();
 
 	void setRectangle(sf::RectangleShape aRectangle);
 	void setCicle(sf::CircleShape aCircle);
 	void setText(sf::Text aText);
-	void setCoordinates(sf::Vector2i newCoordinates);
+	void setCoordinates(Vector2f newCoordinates);
 
 	sf::RectangleShape getRectangle();
 	sf::CircleShape getCircleShape();
 	sf::Text getText();
-	sf::Vector2i getCoordinates();
 
 	void draw(sf::RenderTarget& target);
-	bool isCursorOn(Button aButton, sf::RenderWindow& aWindow);
+	bool isCursorOn(Button& aButton, sf::RenderWindow& aWindow);
 	void followMouse(Button& aButton, sf::RenderWindow& aWindow);
 	bool isButtonClicked(Button& aButton, sf::RenderWindow& aWindow);
+	void changeTextColor(Button& aButton, sf::RenderWindow& aWindow, Text aButtonText, Color newColor);
 };
 
 #endif

@@ -6,9 +6,9 @@
 #include "touristRoute.h"
 
 int main()
-{
-    cout << "Presione la tecla M para acceder al menu.";
-    manageWindowMap();
+{    
+    cout << "Presione la tecla M para acceder al menu o presione el boton en la pantalla.";
+    handleWindowMap();
     return 0;
 }
 

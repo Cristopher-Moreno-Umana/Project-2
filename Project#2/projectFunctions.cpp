@@ -7,6 +7,7 @@ void menu()
     Font projectFont; 
     loadFont(projectFont);
     
+    int vectorSize = 3;
     Text menuText[3];
     fillTextArray(menuText,projectFont);
 
@@ -25,11 +26,13 @@ void menu()
             {
                 menuWindow.close();
             }
-        }
 
+            handleMenuKeyPress(menuEvent,menuText, menuWindow);        
+        }
+       
         menuWindow.clear(Color::Black);
 
-        showTextArray(menuText, menuWindow);
+        showTextArray(menuText, menuWindow, vectorSize);
         menuWindow.display();
     }
 
@@ -43,7 +46,15 @@ void loadMap(Texture& aMapTexture)
     }
 }
 
-void manageWindowMap()
+void loadFont(Font& aFont)
+{
+    if (!aFont.loadFromFile("../ProjectFiles/fonts/arial/arial.ttf"))
+    {
+        exit(EXIT_FAILURE);
+    }
+}
+
+void handleWindowMap()
 {
     Texture mapTexture;
     
@@ -52,6 +63,12 @@ void manageWindowMap()
     Sprite projectMap(mapTexture);
 
     RenderWindow mapWindow(VideoMode(867, 864), "Mapa");
+
+    Font mainWindowFont;
+    loadFont(mainWindowFont);
+    
+    Text menuButtonText("Menu", mainWindowFont, 35);
+    Button menuButton;
 
     if (!mapWindow.isOpen()) 
     {
@@ -76,21 +93,20 @@ void manageWindowMap()
                 }
             }
         }        
-
+       
         mapWindow.clear();
 
+        menuButton = Button(menuButtonText, Vector2f(0, 0));
+        menuButton.changeTextColor(menuButton, mapWindow, menuButtonText,Color::Blue);
+        
+        if (menuButton.isButtonClicked(menuButton, mapWindow))
+        {
+            menu();
+        }
+
         mapWindow.draw(projectMap);
-
-        mapWindow.display();
-
-    }
-}
-
-void loadFont(Font& aFont)
-{
-    if (!aFont.loadFromFile("../ProjectFiles/fonts/arial/arial.ttf"))
-    {
-        exit(EXIT_FAILURE);
+        menuButton.draw(mapWindow);
+        mapWindow.display();       
     }
 }
 
@@ -109,17 +125,117 @@ void fillTextArray(Text aMenuText[], Font& aFont)
     aMenuText[2].setFillColor(Color::Green);
 }
 
-void showTextArray(Text aMenuText[], RenderWindow& aWindow)
-{
-    
-    for (int i = 0; i < 3; i++)
+void showTextArray(Text aText[], RenderWindow& aWindow, int aSize)
+{    
+    for (int i = 0; i < aSize; i++)
     {
-     
-        aWindow.draw(aMenuText[i]);
+        aWindow.draw(aText[i]);
     }
 }
 
-void handleKeyPress(Event& anEvent)
+void handleMenuKeyPress(Event& anEvent, Text aMenuText[], RenderWindow& aWindow)
 {
+    ColorPalette colorPalette;
+    Clock timerClock;
+    if (anEvent.type == Event::KeyPressed)
+    {
+        if (anEvent.key.code == Keyboard::Num1 || anEvent.key.code == Keyboard::Numpad1)
+        {
+            aWindow.close();
+            inputTouristRouteData(colorPalette);
+                        
+        }
+       
+        if (anEvent.key.code == Keyboard::Num2 || anEvent.key.code == Keyboard::Numpad2)
+        {
+            aWindow.close();
+            handleColorPalette(colorPalette);
 
+            cout << "\n\nColor seleccionado con exito.\n\n";
+
+        }
+    }
 }
+
+void inputTouristRouteData(ColorPalette aColorPalette)
+{
+    Text options[2];
+
+    Font textFont;
+    loadFont(textFont);
+
+    options[0] = Text("Ingrese el nombre de la Ruta:", textFont, 20);
+    options[0].setPosition(0, 0);
+
+    options[1] = Text("Ingrese el numero de puntos turisticos:", textFont, 20);
+    options[1].setPosition(0, 30);
+    
+    RenderWindow inputDataWindow(VideoMode(800, 400), "Insertar Ruta");
+
+    if (!inputDataWindow.isOpen())
+    {
+        exit(EXIT_FAILURE);
+    }
+
+    while (inputDataWindow.isOpen())
+    {
+        Event event;
+
+        while (inputDataWindow.pollEvent(event))
+        {
+            if (event.type == Event::Closed)
+            {
+                inputDataWindow.close();
+            }
+        }
+
+        inputDataWindow.clear(Color::Black);
+
+        inputDataWindow.display();
+    }
+}
+
+void handleColorPalette(ColorPalette& aColorPalette)
+{
+    Text option;
+
+    Font optionFont;
+    loadFont(optionFont);
+
+    option = Text("Haga click sobre un boton para seleccionar el color: ", optionFont, 20);
+    
+    option.setPosition(0, 0);
+
+    aColorPalette.fillColorPalette();
+
+    RenderWindow colorPaletteWindow(VideoMode(475, 100), "Paleta de colores");
+
+    if (!colorPaletteWindow.isOpen())
+    {
+        exit(EXIT_FAILURE);
+    }
+
+    while (colorPaletteWindow.isOpen())
+    {
+        Event event;
+
+        while (colorPaletteWindow.pollEvent(event))
+        {
+            if (event.type == Event::Closed)
+            {
+                colorPaletteWindow.close();
+            }
+            aColorPalette.selectedColor(colorPaletteWindow);
+        }
+
+        colorPaletteWindow.clear(Color::Black);
+        colorPaletteWindow.draw(option);
+       
+        aColorPalette.drawPalette(colorPaletteWindow);
+
+        colorPaletteWindow.display();
+    }      
+}
+
+
+
