@@ -142,7 +142,6 @@
     <ClCompile Include="nodeTouristSpot.cpp" />
     <ClCompile Include="projectFunctions.cpp" />
     <ClCompile Include="routeList.cpp" />
-    <ClCompile Include="textField.cpp" />
     <ClCompile Include="touristRoute.cpp" />
     <ClCompile Include="touristSpot.cpp" />
   </ItemGroup>
@@ -154,7 +153,6 @@
     <ClInclude Include="nodeTouristSpot.h" />
     <ClInclude Include="projectFunctions.h" />
     <ClInclude Include="routeList.h" />
-    <ClInclude Include="textField.h" />
     <ClInclude Include="touristRoute.h" />
     <ClInclude Include="touristSpot.h" />
   </ItemGroup>

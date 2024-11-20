@@ -25,13 +25,14 @@ public:
 	void setText(sf::Text aText);
 	void setCoordinates(Vector2f newCoordinates);
 
-	sf::RectangleShape getRectangle();
-	sf::CircleShape getCircleShape();
-	sf::Text getText();
+	RectangleShape getRectangle();
+	CircleShape getCircleShape();
+	Text getText();
+	Vector2f getCoordinates();
 
 	void draw(sf::RenderTarget& target);
 	bool isCursorOn(Button& aButton, sf::RenderWindow& aWindow);
-	void followMouse(Button& aButton, sf::RenderWindow& aWindow);
+	Vector2f followMouse(sf::RenderWindow& aWindow);
 	bool isButtonClicked(Button& aButton, sf::RenderWindow& aWindow);
 	void changeTextColor(Button& aButton, sf::RenderWindow& aWindow, Text aButtonText, Color newColor);
 };

@@ -5,17 +5,29 @@
 #include "touristSpot.h"
 #include "nodeTouristSpot.h"
 #include "touristRoute.h"
-#include "textField.h"
 #include "colorPalette.h"
+#include "nodeTouristRoute.h"
+#include"routeList.h"
 
-void menu();
+extern sf::Font globalFont;
+void loadFont();
+
+void menu(bool* newIsTimeToPlaceSpots, bool* newIstimeToChangeColor);
+
 void loadMap(Texture& aMapTexture);
 
 void handleWindowMap();
-void loadFont(Font& aFont);
-void fillTextArray(Text aMenuText[], Font& aFont);
+
+void fillTextArray(Text aMenuText[]);
+
 void showTextArray(Text aText[], RenderWindow& aWindow, int aSize);
-void handleMenuKeyPress(Event& anEvent, Text aMenuText[], RenderWindow& aWIndow);
-void inputTouristRouteData(ColorPalette aColorPalette);
+
+void fillTouristSpot(ColorPalette aColorPalette, TouristSpot& newSpot);
+
+void fillTouristRoute(TouristSpot& newSpots, TouristRoute& newRoute);
+
+Button inputTouristRouteData(ColorPalette aColorPalette);
+
 void handleColorPalette(ColorPalette& aColorPalette);
+
 #endif

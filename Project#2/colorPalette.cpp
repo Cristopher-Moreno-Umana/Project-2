@@ -2,7 +2,7 @@
 
 ColorPalette::ColorPalette()
 {
-    this->drawColor = Color::White;
+    this->drawColor = Color::Blue;
 	fillColorPalette();
 }
 
@@ -47,6 +47,7 @@ Color ColorPalette::selectedColor(RenderWindow& aWindow)
         if (this->coloredButtons[i].isButtonClicked(coloredButtons[i], aWindow))
         {
             drawColor = coloredButtons[i].getRectangle().getFillColor();
+            cout << "\n\nColor seleccionado con exito.\n\n";
             aWindow.close();
         }
     }

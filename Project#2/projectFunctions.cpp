@@ -1,15 +1,24 @@
 #include "projectFunctions.h"
 
-void menu()
+Font globalFont;
+
+void loadFont()
+{
+    if (!globalFont.loadFromFile("../ProjectFiles/fonts/arial/arial.ttf"))
+    {
+        exit(EXIT_FAILURE);
+    }
+}
+
+void menu(bool* newIsTimeToPlaceSpots, bool* newIstimeToChangeColor)
 {
     RenderWindow menuWindow(VideoMode(800, 400), "Menu");
     
-    Font projectFont; 
-    loadFont(projectFont);
-    
-    int vectorSize = 3;
-    Text menuText[3];
-    fillTextArray(menuText,projectFont);
+    int vectorSize = 4;
+    Text menuText[4];
+    fillTextArray(menuText);
+
+    ColorPalette colorPalette;
 
     if (!menuWindow.isOpen())
     {
@@ -27,7 +36,22 @@ void menu()
                 menuWindow.close();
             }
 
-            handleMenuKeyPress(menuEvent,menuText, menuWindow);        
+            if (menuEvent.type == Event::KeyPressed)
+            {
+                if (menuEvent.key.code == Keyboard::Num1 || menuEvent.key.code == Keyboard::Numpad1)
+                {
+                    menuWindow.close();
+                    
+                    *newIsTimeToPlaceSpots = true;
+                }
+
+                if (menuEvent.key.code == Keyboard::Num2 || menuEvent.key.code == Keyboard::Numpad2)
+                {
+                    menuWindow.close();
+
+                    *newIstimeToChangeColor = true;
+                }
+            }
         }
        
         menuWindow.clear(Color::Black);
@@ -46,31 +70,30 @@ void loadMap(Texture& aMapTexture)
     }
 }
 
-void loadFont(Font& aFont)
-{
-    if (!aFont.loadFromFile("../ProjectFiles/fonts/arial/arial.ttf"))
-    {
-        exit(EXIT_FAILURE);
-    }
-}
-
 void handleWindowMap()
 {
     Texture mapTexture;
-    
+
     loadMap(mapTexture);
 
     Sprite projectMap(mapTexture);
 
     RenderWindow mapWindow(VideoMode(867, 864), "Mapa");
 
-    Font mainWindowFont;
-    loadFont(mainWindowFont);
-    
-    Text menuButtonText("Menu", mainWindowFont, 35);
+    Text menuButtonText("Menu", globalFont, 30);
     Button menuButton;
 
-    if (!mapWindow.isOpen()) 
+    ColorPalette colorPalette;
+
+    bool isTimeToPlaceSpots = false;
+    bool isTimeToChangeColor = false;
+
+    TouristRoute route;
+    TouristSpot spot;
+
+    RouteList routeList;
+
+    if (!mapWindow.isOpen())
     {
         exit(EXIT_FAILURE);
     }
@@ -89,121 +112,124 @@ void handleWindowMap()
             {
                 if (event.key.code == Keyboard::M)
                 {
-                    menu();
+                    menu(&isTimeToPlaceSpots, &isTimeToChangeColor);
                 }
             }
-        }        
-       
+        }
+
         mapWindow.clear();
 
-        menuButton = Button(menuButtonText, Vector2f(0, 0));
-        menuButton.changeTextColor(menuButton, mapWindow, menuButtonText,Color::Blue);
-        
+        menuButton = Button(menuButtonText, Vector2f(400, 0));
+        menuButton.changeTextColor(menuButton, mapWindow, menuButtonText, Color::Green);
+
         if (menuButton.isButtonClicked(menuButton, mapWindow))
         {
-            menu();
+            menu(&isTimeToPlaceSpots, &isTimeToChangeColor);
         }
 
         mapWindow.draw(projectMap);
         menuButton.draw(mapWindow);
-        mapWindow.display();       
+
+        if (isTimeToPlaceSpots)
+        {
+            fillTouristSpot(colorPalette, spot);
+            isTimeToPlaceSpots = false;
+        }
+
+        if (isTimeToChangeColor)
+        {
+            handleColorPalette(colorPalette);
+            isTimeToChangeColor = false;
+        }
+
+        if (!spot.getNameString().isEmpty() && !spot.getIsSpotClicked())
+        {
+            route = TouristRoute(inputTouristRouteData(colorPalette));
+            fillTouristRoute(spot, route);
+        }
+
+        spot.placeSpotButton(mapWindow);
+        spot.displaySpot(mapWindow);
+       
+
+        if (!route.getStringName().isEmpty())
+        {
+            route.getName().draw(mapWindow);
+        }
+
+        mapWindow.display();
     }
 }
 
-void fillTextArray(Text aMenuText[], Font& aFont)
+void fillTextArray(Text aMenuText[])
 {
-    aMenuText[0] = Text::Text("Presione la tecla segun la opcion:", aFont, 20);
-    aMenuText[1] = Text::Text("1: Insertar nueva ruta turistica", aFont, 20);
-    aMenuText[2] = Text::Text("2: Cambiar colores de dibujo", aFont, 20);
+    aMenuText[0] = Text::Text("Presione la TECLA segun la opcion:", globalFont, 20);
+    aMenuText[1] = Text::Text("1: Insertar nueva ruta turistica", globalFont, 20);
+    aMenuText[2] = Text::Text("2: Cambiar colores de dibujo", globalFont, 20);
+    aMenuText[3] = Text::Text("Si selecciona 1: dirijase a la consola e ingrese la informacion solicitada.", globalFont, 20);
+
 
     aMenuText[0].setPosition(0, 0);
     aMenuText[1].setPosition(0, 30);
     aMenuText[2].setPosition(0, 60);
+    aMenuText[3].setPosition(Vector2f(0, 90));
 
     aMenuText[0].setFillColor(Color::Red);
     aMenuText[1].setFillColor(Color::Green);
     aMenuText[2].setFillColor(Color::Green);
+    aMenuText[3].setFillColor(Color::Green);
 }
 
 void showTextArray(Text aText[], RenderWindow& aWindow, int aSize)
-{    
+{
     for (int i = 0; i < aSize; i++)
     {
         aWindow.draw(aText[i]);
     }
 }
 
-void handleMenuKeyPress(Event& anEvent, Text aMenuText[], RenderWindow& aWindow)
+void fillTouristSpot(ColorPalette aColorPalette, TouristSpot& newSpot)
 {
-    ColorPalette colorPalette;
-    Clock timerClock;
-    if (anEvent.type == Event::KeyPressed)
-    {
-        if (anEvent.key.code == Keyboard::Num1 || anEvent.key.code == Keyboard::Numpad1)
-        {
-            aWindow.close();
-            inputTouristRouteData(colorPalette);
-                        
-        }
-       
-        if (anEvent.key.code == Keyboard::Num2 || anEvent.key.code == Keyboard::Numpad2)
-        {
-            aWindow.close();
-            handleColorPalette(colorPalette);
+    string touristSpotName;
 
-            cout << "\n\nColor seleccionado con exito.\n\n";
+    cout << "\nIngrese el nombre del punto turistico: ";
+    cin >> touristSpotName;
 
-        }
-    }
+    Text spotName(touristSpotName, globalFont, 15);
+
+    newSpot = TouristSpot(spotName, aColorPalette.drawColor);
+
+    cout << "\n\nPunto creado con exito.\n";
+    cout << "\n\nMinimice esta venta, dirijase al mapa y coloque con el click derecho el o los puntos.\n";
+    cout << "\nUna vez colocados vuelva a esta ventana.\n\n";
 }
 
-void inputTouristRouteData(ColorPalette aColorPalette)
+void fillTouristRoute(TouristSpot& newSpot, TouristRoute& newRoute)
 {
-    Text options[2];
+    newRoute.addNewTouristSpot(newSpot);
+}
 
-    Font textFont;
-    loadFont(textFont);
+Button inputTouristRouteData(ColorPalette aColorPalette)
+{
+    string touristRouteName;
 
-    options[0] = Text("Ingrese el nombre de la Ruta:", textFont, 20);
-    options[0].setPosition(0, 0);
+    cout << "\n\nIngrese el nombre de la ruta turistica: ";
+    cin >> touristRouteName;
 
-    options[1] = Text("Ingrese el numero de puntos turisticos:", textFont, 20);
-    options[1].setPosition(0, 30);
-    
-    RenderWindow inputDataWindow(VideoMode(800, 400), "Insertar Ruta");
+    Text touristRouteText(touristRouteName, globalFont, 30);
+    touristRouteText.setFillColor(aColorPalette.drawColor);
 
-    if (!inputDataWindow.isOpen())
-    {
-        exit(EXIT_FAILURE);
-    }
+    Button touristRouteButton(touristRouteText, Vector2f(0, 0));
 
-    while (inputDataWindow.isOpen())
-    {
-        Event event;
-
-        while (inputDataWindow.pollEvent(event))
-        {
-            if (event.type == Event::Closed)
-            {
-                inputDataWindow.close();
-            }
-        }
-
-        inputDataWindow.clear(Color::Black);
-
-        inputDataWindow.display();
-    }
+    return touristRouteButton;
 }
 
 void handleColorPalette(ColorPalette& aColorPalette)
 {
     Text option;
 
-    Font optionFont;
-    loadFont(optionFont);
+    option = Text("Haga click sobre un boton para seleccionar el color: ", globalFont, 20);
 
-    option = Text("Haga click sobre un boton para seleccionar el color: ", optionFont, 20);
-    
     option.setPosition(0, 0);
 
     aColorPalette.fillColorPalette();
@@ -230,12 +256,9 @@ void handleColorPalette(ColorPalette& aColorPalette)
 
         colorPaletteWindow.clear(Color::Black);
         colorPaletteWindow.draw(option);
-       
+
         aColorPalette.drawPalette(colorPaletteWindow);
 
         colorPaletteWindow.display();
-    }      
+    }
 }
-
-
-

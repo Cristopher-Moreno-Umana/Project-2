@@ -3,6 +3,32 @@
 TouristRoute::TouristRoute()
 {
 	this->head = nullptr;
+	this->name = Button();
+}
+
+TouristRoute::TouristRoute(Button aNameButton)
+{
+	this->head = nullptr;
+	this->name = aNameButton;
+}
+
+TouristRoute::~TouristRoute()
+{
+}
+
+void TouristRoute::setName(Button aNameButton)
+{
+	this->name = aNameButton;
+}
+
+sf::String TouristRoute::getStringName()
+{
+	return this->name.getText().getString();
+}
+
+Button TouristRoute::getName()
+{
+	return this->name;
 }
 
 void TouristRoute::addNewTouristSpot(TouristSpot aTouristSpot)
@@ -19,6 +45,7 @@ void TouristRoute::addNewTouristSpot(TouristSpot aTouristSpot)
 	newNodeTouristSpot->previous = nullptr;
 	
 	head = newNodeTouristSpot;
+	cout << "\n\nPunto agregado a la ruta con exito.\n\n";
 }
 
 void TouristRoute::deleteTouristSpot(string aTouristSpotName)
@@ -31,7 +58,7 @@ void TouristRoute::deleteTouristSpot(string aTouristSpotName)
 	NodeTouristSpot* current = head;
 	NodeTouristSpot* previous = nullptr;
 
-	while (current != nullptr && current->touristSpot.getName() != aTouristSpotName)
+	while (current != nullptr && current->touristSpot.getNameString() != aTouristSpotName)
 	{
 		previous = current;
 		current = current->next;

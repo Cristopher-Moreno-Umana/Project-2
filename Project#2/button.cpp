@@ -52,6 +52,9 @@ void Button::setText(sf::Text aText)
 void Button::setCoordinates(Vector2f newCoordinates)
 {
 	this->coordinates = newCoordinates;
+	this->text.setPosition(this->coordinates);
+	this->circle.setPosition(this->coordinates);
+	this->rectangle.setPosition(this->coordinates);
 }
 
 sf::RectangleShape Button::getRectangle()
@@ -69,19 +72,24 @@ sf::Text Button::getText()
 	return this->text;
 }
 
+Vector2f Button::getCoordinates()
+{
+	return this->coordinates;
+}
+
 void Button::draw(sf::RenderTarget& target)
 {
 	if (this->rectangle.getSize().x > 0 && rectangle.getSize().y > 0)
 	{
-		target.draw(rectangle);
+		target.draw(this->rectangle);
 	}
 	else if (this->circle.getRadius() > 0)
 	{
-		target.draw(circle);
+		target.draw(this->circle);
 	}
 	else if (!this->text.getString().isEmpty())
 	{
-		target.draw(text);
+		target.draw(this->text);
 	}
 }
 
@@ -102,23 +110,30 @@ bool Button::isCursorOn(Button& aButton,sf::RenderWindow& aWindow)
 	return isOnRectangleButton || isOnCircleButton  || isOnTextButton;
 }
 
-void Button::followMouse(Button& aButton, sf::RenderWindow& aWindow)
+Vector2f Button::followMouse(sf::RenderWindow& aWindow)
 {
+	Vector2f currentCoordinates;
 	float mouseX = static_cast<float>(Mouse::getPosition(aWindow).x);
 	float mouseY = static_cast<float>(Mouse::getPosition(aWindow).y);
 
-	if (aButton.getCircleShape().getRadius() > 0)
+	if (this->getCircleShape().getRadius() > 0)
 	{
-		aButton.getCircleShape().setPosition(mouseX, mouseY);
+		this->getCircleShape().setPosition(mouseX, mouseY);
 	}
-	else if (aButton.getRectangle().getSize().x > 0 && aButton.getRectangle().getSize().y > 0)
+	else if (this->getRectangle().getSize().x > 0 && this->getRectangle().getSize().y > 0)
 	{
-		aButton.getRectangle().setPosition(mouseX, mouseY);
+		this->getRectangle().setPosition(mouseX, mouseY);
 	}
-	else if (!aButton.getText().getString().isEmpty())
+	else if (!this->getText().getString().isEmpty())
 	{
-		aButton.getText().setPosition(mouseX, mouseY);
+		this->getText().setPosition(mouseX, mouseY);
 	}
+
+	currentCoordinates = Vector2f(mouseX, mouseY);
+
+	this->setCoordinates(currentCoordinates);
+
+	return currentCoordinates;
 }
 
 bool Button::isButtonClicked(Button& aButton, sf::RenderWindow& aWindow)

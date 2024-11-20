@@ -6,8 +6,11 @@
 class RouteList
 {
 public:
-	NodeTouristRoute head;
-
+	NodeTouristRoute* head;
 	
+	RouteList();
+
+	void addNewRoute(TouristRoute aTouristRoute);
+	void deleteTouristRoute(sf::String aTouristRouteName);
 };
 #endif
